@@ -1,0 +1,12 @@
+//change to the directory where the build.xml file is located
+cd [location]
+// run the build script
+ant 
+//template execution script
+spark-submit  \
+ --class FindCommonLetterCombinations \
+ --master local[4] \
+ --driver-memory 2g \
+ --num-executors 1 \
+ Subwords.jar \
+ out/

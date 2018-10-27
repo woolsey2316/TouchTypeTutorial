@@ -129,7 +129,7 @@ public void toJsonFile () {
 }
 
 public void recordData() {
-	wordsPerMinute = Math.round((double) letterIndex*60000/
+	wordsPerMinute = Math.round((double) (letterIndex-endOfWord)*60000/
 			(averageWordSize*(wordTime.time(TimeUnit.MILLISECONDS))));
 	wordsPerMinuteData.add(wordsPerMinute);
 	wordTime.reset();
@@ -174,7 +174,11 @@ public Double getAccuracy() {
 public int getRecentScore() {
 	int sum = 0;
 	for (int i = 0; i < 5; ++i) {
-		sum += scoreData.descendingIterator().next();
+		if (wordsPerMinuteData.descendingIterator().hasNext()) {
+			sum += scoreData.descendingIterator().next();
+		} else {
+			return 0;
+		}
 	}
 	return sum/5;
 
@@ -183,7 +187,11 @@ public int getRecentScore() {
 public Double getRecentWordsperMinute() {
 	double sum = 0;
 	for (int i = 0; i < 5; ++i) {
-		sum += wordsPerMinuteData.descendingIterator().next();
+		if (wordsPerMinuteData.descendingIterator().hasNext()) {
+			sum += wordsPerMinuteData.descendingIterator().next();
+		} else {
+			return 0.0;
+		}
 	}
 	return sum/5;
 
@@ -192,7 +200,11 @@ public Double getRecentWordsperMinute() {
 public Double getRecentAccuracy() {
 	double sum = 0;
 	for (int i = 0; i < 5; ++i) {
-		sum += accuracyData.descendingIterator().next();
+		if (wordsPerMinuteData.descendingIterator().hasNext()) {
+			sum += accuracyData.descendingIterator().next();
+		} else {
+			return 0.0;
+		}
 	}
 	return sum/5;
 	
@@ -240,7 +252,7 @@ public double averageScore() {
 	return 1.0*sum/N;
 }
 
-public static double[][] getAccuracyDataArray() {
+public double[][] getAccuracyDataArray() {
 	 int N = accuracyData.size();
 	 double[] time = new double[N];
 	 double[] Score = new double[N];
@@ -254,7 +266,7 @@ public static double[][] getAccuracyDataArray() {
   return new double[][]{time, Score};
 }
 	 
-public static double[][] getWordsPerMinuteDataArray() {
+public double[][] getWordsPerMinuteDataArray() {
 	 int N = wordsPerMinuteData.size();
 	 double[] time = new double[N];
   double[] wpm = new double[N];
@@ -282,6 +294,7 @@ public String validateInput(char input) {
 		} else if (input=='\n') {
 			recordData();
 			letterIndex = 0;
+			endOfWord = 0;
 			if (lineNumber == paragraphOfWords.length - 1) {
 				lineNumber = 0;
 				paragraphOfWords = wordGenerator.generateWords(letterLevel);

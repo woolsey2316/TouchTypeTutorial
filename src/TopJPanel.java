@@ -74,6 +74,17 @@ public class TopJPanel extends JPanel {
 		
 		panelWPMValue.setText(df.format(wpm));
 	}
+	
+	void setScoreValue(int score) {
+		if (score > 1000) {
+			panelScoreValue.setForeground(Color.GREEN);
+		} else if (score > 800) {
+			panelScoreValue.setForeground(Color.ORANGE);
+		} else {
+			panelScoreValue.setForeground(Color.RED);
+		}
+		panelScoreValue.setText(df.format(score));
+	}
 		
 }
 

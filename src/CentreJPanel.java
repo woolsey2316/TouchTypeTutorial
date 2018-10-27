@@ -23,12 +23,10 @@ public class CentreJPanel extends JPanel implements KeyListener {
 	String[] paragraphOfWords;
 	int linenumber = 0;
 	String result;
-	//WordGenerator wordGenerator;
 	Model performanceMetrics;
 
 	public CentreJPanel(Model performanceMetrics_) {
 		performanceMetrics = performanceMetrics_;
-		//wordGenerator = performanceMetrics.getWordGenerator();
 		textField = new JTextField[performanceMetrics.getWordGenerator().getNumberOfLines()];
 		layeredPane = new JLayeredPane[performanceMetrics.getWordGenerator().getNumberOfLines()];
 		textToType = new JLabel[performanceMetrics.getWordGenerator().getNumberOfLines()];
@@ -136,5 +134,9 @@ public class CentreJPanel extends JPanel implements KeyListener {
 	
 	String getResult() {
 		return result;
+	}
+	
+	Model getPerformanceMetrics() {
+		return performanceMetrics;
 	}
 }

@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EtchedBorder;
 
 import org.knowm.xchart.XChartPanel;
@@ -54,6 +56,20 @@ public class GUI extends JFrame {
 	topjPanel = new TopJPanel();
 	bottomjPanel = new AlphabetPanel();
 	
+  try {
+	    UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+	} catch (UnsupportedLookAndFeelException ex) {
+	    ex.printStackTrace();
+	} catch (IllegalAccessException ex) {
+	    ex.printStackTrace();
+	} catch (InstantiationException ex) {
+	    ex.printStackTrace();
+	} catch (ClassNotFoundException ex) {
+	    ex.printStackTrace();
+	}
+
+  UIManager.put("swing.boldMetal", Boolean.FALSE);
+	
 	setSize(1200, 700);
 	
 	add(bottomjPanel, BorderLayout.SOUTH);
@@ -75,32 +91,32 @@ public class GUI extends JFrame {
 		           JOptionPane.QUESTION_MESSAGE, null, null, null);
 		      if (confirm == 0) {
 		      	performanceMetrics.toJsonFile(); 
-		      	System.exit(0); 
+		      	System.exit(0);
 		      }
 		  }
 		};
 		addWindowListener(exitListener);
-	}
- 
-	void refreshPerformanceIndicators() {
-		timer = new Timer(0, new ActionListener() {
+		
+
+		timer = new Timer(10000, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        repaint();
+      	leftjPanel.refreshChartDisplay(centrejPanel.getPerformanceMetrics().getAccuracyDataArray(), 
+      			centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
+    		topjPanel.setAccuracyValue(centrejPanel.getPerformanceMetrics().getRecentAccuracy());
+    		topjPanel.setWpmValue(centrejPanel.getPerformanceMetrics().getRecentWordsperMinute());
+    		topjPanel.setScoreValue(centrejPanel.getPerformanceMetrics().getRecentScore());
       }
     });
     timer.setRepeats(true);
-    // Aprox. 60 FPS
-    timer.setDelay(17);
+    timer.setDelay(100);
     timer.start();
-    
-			topjPanel.setAccuracyValue(performanceMetrics.getRecentAccuracy());
-			topjPanel.setWpmValue(performanceMetrics.getRecentWordsperMinute());
-			
-			leftjPanel.refreshChartDisplay(performanceMetrics.getAccuracyDataArray(),
-					performanceMetrics.getWordsPerMinuteDataArray());
-			
 	}
-	
+ 
+	void refreshPerformanceIndicators() {
+		
+
+
+	}
 	
 }

@@ -64,7 +64,7 @@ public class WordGenerator {
 		
 		FileReader fr;
 		try {
-			fr = new FileReader("data preparation/words.txt");
+			fr = new FileReader("DataPreparation/words.txt");
 			Scanner in = new Scanner(fr);
 			int ind = 0;
 			while (in.hasNextLine()) {

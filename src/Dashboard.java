@@ -9,20 +9,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-public class TopJPanel extends JPanel {
+public class Dashboard extends JPanel {
 	DecimalFormat df = new DecimalFormat("##.#");
 	JLabel panelWPMValue = new JLabel("___", JLabel.CENTER);
 	JLabel panelAccuracyValue = new JLabel("___", JLabel.CENTER);
 	JLabel panelScoreValue = new JLabel("_____", JLabel.CENTER);
 	
-	public TopJPanel() {
+	public Dashboard() {
 		Font typingFont = new Font("Palatino", Font.BOLD, 18);
 		Font metricFont = new Font("Maven Pro", Font.PLAIN, 40);
 		
 		setLayout(new FlowLayout());
-		setBackground(Color.white);
 	
-		//top Panel
 		JLabel accuracyTitle = new JLabel("Accuracy", JLabel.CENTER);
 		accuracyTitle.setFont(new Font("Palatino", Font.BOLD, 12));
 	
@@ -48,6 +46,8 @@ public class TopJPanel extends JPanel {
 		panelScoreValue.setFont(metricFont);
 		add(panelScoreValue);
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		
+		setBackground(new Color(30, 51, 91));
 		
 	}
 	
@@ -75,16 +75,17 @@ public class TopJPanel extends JPanel {
 		panelWPMValue.setText(df.format(wpm));
 	}
 	
-	void setScoreValue(int score) {
-		if (score > 1000) {
+	void setScoreValue(Integer score) {
+		if (score > 300) {
 			panelScoreValue.setForeground(Color.GREEN);
-		} else if (score > 800) {
+		} else if (score > 200) {
 			panelScoreValue.setForeground(Color.ORANGE);
 		} else {
 			panelScoreValue.setForeground(Color.RED);
 		}
 		panelScoreValue.setText(df.format(score));
 	}
+	
 		
 }
 

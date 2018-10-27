@@ -36,7 +36,6 @@ public class GUI extends JFrame {
 	CentreJPanel centrejPanel;
 	RightJPanel rightjPanel;
 	LeftJPanel leftjPanel;
-	TopJPanel topjPanel;
 	AlphabetPanel bottomjPanel;
 	User user;
 	String result;
@@ -53,22 +52,7 @@ public class GUI extends JFrame {
 	centrejPanel = new CentreJPanel(performanceMetrics_);
 	rightjPanel = new RightJPanel();
 	leftjPanel = new LeftJPanel();
-	topjPanel = new TopJPanel();
 	bottomjPanel = new AlphabetPanel();
-	
-  try {
-	    UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-	} catch (UnsupportedLookAndFeelException ex) {
-	    ex.printStackTrace();
-	} catch (IllegalAccessException ex) {
-	    ex.printStackTrace();
-	} catch (InstantiationException ex) {
-	    ex.printStackTrace();
-	} catch (ClassNotFoundException ex) {
-	    ex.printStackTrace();
-	}
-
-  UIManager.put("swing.boldMetal", Boolean.FALSE);
 	
 	setSize(1200, 700);
 	
@@ -76,8 +60,8 @@ public class GUI extends JFrame {
 	add(centrejPanel, BorderLayout.CENTER);
 	add(rightjPanel, BorderLayout.EAST);
 	add(leftjPanel, BorderLayout.WEST);
-	add(topjPanel, BorderLayout.NORTH);
 	
+	pack();
 	setVisible(true);
 	
 	setLocationRelativeTo(null);
@@ -97,26 +81,19 @@ public class GUI extends JFrame {
 		};
 		addWindowListener(exitListener);
 		
-
-		timer = new Timer(10000, new ActionListener() {
+		timer = new Timer(2000, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
       	leftjPanel.refreshChartDisplay(centrejPanel.getPerformanceMetrics().getAccuracyDataArray(), 
       			centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
-    		topjPanel.setAccuracyValue(centrejPanel.getPerformanceMetrics().getRecentAccuracy());
-    		topjPanel.setWpmValue(centrejPanel.getPerformanceMetrics().getRecentWordsperMinute());
-    		topjPanel.setScoreValue(centrejPanel.getPerformanceMetrics().getRecentScore());
+    		centrejPanel.setAccuracyValue(centrejPanel.getPerformanceMetrics().getRecentAccuracy());
+    		centrejPanel.setWpmValue(centrejPanel.getPerformanceMetrics().getRecentWordsperMinute());
+    		centrejPanel.setScoreValue(centrejPanel.getPerformanceMetrics().getRecentScore());
       }
     });
     timer.setRepeats(true);
-    timer.setDelay(100);
+    timer.setDelay(1000);
     timer.start();
-	}
- 
-	void refreshPerformanceIndicators() {
-		
-
-
 	}
 	
 }

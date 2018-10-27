@@ -42,7 +42,8 @@ public class LeftJPanel extends JPanel{
 	  accuracyChartPanel = new XChartPanel<XYChart>(accuracyChart);
 	  
 		add(accuracyChartPanel);
-		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		setBorder(null);
+		setBackground(Color.WHITE);
 	}
 	
 	void refreshChartDisplay(double[][] accuracyData, double[][] WordsPMData) {

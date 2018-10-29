@@ -48,4 +48,14 @@ public class CentreJPanel extends JPanel {
 	void setScoreValue(int score) {
 		dashboard.setScoreValue(score);
 	}
+	
+	TypingPanel getTypingPanel() {
+		return typingPanel;
+	}
+	
+	void refreshDisplay() {
+		dashboard.setAccuracyValue(performanceMetrics.getRecentAccuracy());
+		dashboard.setWpmValue(performanceMetrics.getRecentWordsperMinute());
+		dashboard.setScoreValue(performanceMetrics.getRecentScore());
+	}
 }

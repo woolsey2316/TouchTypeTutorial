@@ -41,9 +41,11 @@ public class DashBoard2 extends JPanel{
                   		text[j][0] = "0";
                     	text[j][1] = title[j];
                   			doc[j] = new DefaultStyledDocument(sc);
+                        StyleConstants.setAlignment(excellentStyle, StyleConstants.ALIGN_CENTER);
+                        doc[j].setParagraphAttributes(0, doc[j].getLength(), excellentStyle, false);
                     		dashboard[j] = new JTextPane(doc[j]);
                     		dashboard[j].setBackground(colour);
-                    		dashboard[j].setFocusable(false);;
+                    		dashboard[j].setFocusable(false);
                     		
                     		doc[j].insertString(0, text[j][0], excellentStyle);
                         int start = dashboard[j].getText().length();

@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -80,20 +81,34 @@ public class GUI extends JFrame {
 		  }
 		};
 		addWindowListener(exitListener);
-		
-		timer = new Timer(2000, new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-      	leftjPanel.refreshChartDisplay(centrejPanel.getPerformanceMetrics().getAccuracyDataArray(), 
-      			centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
-    		centrejPanel.setAccuracyValue(centrejPanel.getPerformanceMetrics().getRecentAccuracy());
-    		centrejPanel.setWpmValue(centrejPanel.getPerformanceMetrics().getRecentWordsperMinute());
-    		centrejPanel.setScoreValue(centrejPanel.getPerformanceMetrics().getRecentScore());
-      }
-    });
-    timer.setRepeats(true);
-    timer.setDelay(1000);
-    timer.start();
-	}
 	
+  SwingWorker worker = new SwingWorker<Void, Void>() {
+    @Override
+    public Void doInBackground() {
+	    leftjPanel.refreshChartDisplay(centrejPanel.getPerformanceMetrics().getAccuracyDataArray(), 
+	    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
+	    System.out.println("doing");
+			return null;
+
+    }
+
+    @Override
+    public void done() {
+    	System.out.println("done");
+
+    }
+	};
+	
+	final int INTERVAL = 4000;
+	timer = new Timer(INTERVAL, new ActionListener() {
+		public void actionPerformed(ActionEvent evt) {
+			worker.execute();
+			System.out.println("hi");
+			
+	    }
+	 });
+	timer.setRepeats(true);
+	timer.start();
+
+  }
 }

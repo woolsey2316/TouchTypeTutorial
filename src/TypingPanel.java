@@ -41,16 +41,17 @@ public class TypingPanel extends JPanel implements KeyListener {
 		for (int i = 0; i < textField.length; ++i) {
 			gc.gridy = i;
 			textField[i] = new JTextField();
-			textField[i].setFont(new Font("Palatino", Font.BOLD, 18));
+			textField[i].setFont(new Font("Courier New", Font.BOLD, 24));
 			textField[i].setOpaque(false);
 			textField[i].setCaretColor(Color.GREEN);
 			textField[i].addKeyListener(this);
 			textField[i].setMinimumSize(new Dimension(200, 30));
 			textField[i].setBorder(null);
 			textField[i].setForeground(Color.WHITE);
+			textField[i].setCaret(new ThickCaret());
 			
 			textToType[i] = new JLabel(htmlForm(performanceMetrics.getWordList()[i]));
-			textToType[i].setFont(new Font("Palatino", Font.BOLD, 18));
+			textToType[i].setFont(new Font("Courier New", Font.BOLD, 24));
 			textToType[i].setForeground(Color.GRAY);
 			
 			disableKeys(textField[i].getInputMap());
@@ -58,7 +59,15 @@ public class TypingPanel extends JPanel implements KeyListener {
 			add(textField[i], gc);
 			add(textToType[i], gc);
 			setBackground(new Color(240,240,240));
+			
+			textField[0].setEditable(true);
+
 		}
+		
+		for (int i = 0; i < performanceMetrics.getWordGenerator().getNumberOfLines(); i++) {
+			textField[i].setEditable(false);
+		}
+		
 		textField[0].requestFocusInWindow();	
 	}
 	
@@ -71,6 +80,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 			textField[linenumber].setCaretColor(Color.GREEN);
 		  
 		} else if (result == "NEWLINE") {
+			textField[linenumber].setEditable(false);
 			if (linenumber == performanceMetrics.getWordGenerator().getNumberOfLines()-1) {
 				linenumber = 0;
 				for (int i = 0; i < textField.length; ++i) {
@@ -83,6 +93,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 			}
 			textField[linenumber].grabFocus();
 			textField[linenumber].requestFocus();
+			textField[linenumber].setEditable(true);
 		} else if (result == "SPACE") {
 			textField[linenumber].setEditable(true);
 			textField[linenumber].setCaretColor(Color.GREEN);

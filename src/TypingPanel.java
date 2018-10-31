@@ -25,8 +25,8 @@ public class TypingPanel extends JPanel implements KeyListener {
 	String result;
 	Model performanceMetrics;
 
-	public TypingPanel(Model performanceMetrics_) {
-		performanceMetrics = performanceMetrics_;
+	public TypingPanel() {
+		performanceMetrics = new Model();
 		textField = new JTextField[performanceMetrics.getWordGenerator().getNumberOfLines()];
 		layeredPane = new JLayeredPane[performanceMetrics.getWordGenerator().getNumberOfLines()];
 		textToType = new JLabel[performanceMetrics.getWordGenerator().getNumberOfLines()];

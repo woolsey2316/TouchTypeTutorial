@@ -40,17 +40,15 @@ public class GUI extends JFrame {
 	AlphabetPanel bottomjPanel;
 	User user;
 	String result;
-	Model performanceMetrics;
 	String lineOfWordsHTML;
 	Timer timer;
 
 	private char[] characters = {'e','t','a','o','i','n','s',
 			'r','d','l','c','u','m','w','f','g','y','p','b','v','k','j','x','q','z'};
 	
-	public GUI (User user_, Model performanceMetrics_) {
+	public GUI (User user_) {
 	user = user_; 
-	performanceMetrics = performanceMetrics_;
-	centrejPanel = new CentreJPanel(performanceMetrics_);
+	centrejPanel = new CentreJPanel();
 	rightjPanel = new RightJPanel();
 	leftjPanel = new LeftJPanel();
 	bottomjPanel = new AlphabetPanel();
@@ -75,35 +73,38 @@ public class GUI extends JFrame {
 		           "Confirm Exit", JOptionPane.YES_NO_OPTION, 
 		           JOptionPane.QUESTION_MESSAGE, null, null, null);
 		      if (confirm == 0) {
-		      	performanceMetrics.toJsonFile(); 
+		      	centrejPanel.getTypingPanel().getPerformanceMetrics().toJsonFile(); 
 		      	System.exit(0);
 		      }
 		  }
 		};
 		addWindowListener(exitListener);
 	
-  SwingWorker worker = new SwingWorker<Void, Void>() {
-    @Override
-    public Void doInBackground() {
-	    leftjPanel.refreshChartDisplay(centrejPanel.getPerformanceMetrics().getAccuracyDataArray(), 
-	    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
-	    System.out.println("doing");
-			return null;
-
-    }
-
-    @Override
-    public void done() {
-    	System.out.println("done");
-
-    }
-	};
+  
 	
 	final int INTERVAL = 4000;
 	timer = new Timer(INTERVAL, new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
+			SwingWorker worker = new SwingWorker<Void, Void>() {
+		    @Override
+		    public Void doInBackground() {
+
+			    System.out.println("doing");
+					return null;
+
+		    }
+
+		    @Override
+		    public void done() {
+		    	System.out.println("done");
+			    leftjPanel.refreshChartDisplay(centrejPanel.getTypingPanel().getPerformanceMetrics().getAccuracyDataArray(), 
+			    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
+			    centrejPanel.refreshDisplay();
+
+		    }
+			};
 			worker.execute();
-			System.out.println("hi");
+			System.out.println("begin");
 			
 	    }
 	 });

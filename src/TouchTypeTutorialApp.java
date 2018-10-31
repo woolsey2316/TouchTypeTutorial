@@ -29,7 +29,6 @@ public class TouchTypeTutorialApp {
 	User user;
 	GUI gui;
 	WordGenerator wordGenerator;
-	Model performanceMetrics;
 	
 	
 public TouchTypeTutorialApp () {
@@ -37,8 +36,7 @@ public TouchTypeTutorialApp () {
 	wordGenerator = new WordGenerator();
 	user = new User();
 	user.loadUserProfile();
-	performanceMetrics = user.getPerformanceMetrics();
-	gui = new GUI(user, performanceMetrics);
+	gui = new GUI(user);
 	
 }
 

@@ -19,14 +19,13 @@ public class CentreJPanel extends JPanel {
 	String[] paragraphOfWords;
 	int linenumber = 0;
 	String result;
-	Model performanceMetrics;
 	
-	public CentreJPanel(Model performanceMetrics_) {
+	public CentreJPanel() {
 		setLayout(new BoxLayout(this, 1));
 		setBackground(Color.white);
 		setBorder(null);
 		
-		typingPanel = new TypingPanel(performanceMetrics_);
+		typingPanel = new TypingPanel();
 		dashboard = new DashBoard2();
 		add(dashboard);
 		add(typingPanel);
@@ -53,9 +52,13 @@ public class CentreJPanel extends JPanel {
 		return typingPanel;
 	}
 	
+	DashBoard2 getDashBoard() {
+		return dashboard;
+	}
+	
 	void refreshDisplay() {
-		dashboard.setAccuracyValue(performanceMetrics.getRecentAccuracy());
-		dashboard.setWpmValue(performanceMetrics.getRecentWordsperMinute());
-		dashboard.setScoreValue(performanceMetrics.getRecentScore());
+		dashboard.setAccuracyValue(typingPanel.getPerformanceMetrics().getRecentAccuracy());
+		dashboard.setWpmValue(typingPanel.getPerformanceMetrics().getRecentWordsperMinute());
+		dashboard.setScoreValue(typingPanel.getPerformanceMetrics().getRecentScore());
 	}
 }

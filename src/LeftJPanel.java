@@ -1,9 +1,7 @@
 import java.awt.Color;
 import java.awt.GridLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
 
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
@@ -23,7 +21,7 @@ public class LeftJPanel extends JPanel{
 	  wpmChart.addSeries("wordsPerMinute", new double[]{0.0}, new double[]{20.0});
 	  wpmChart.getStyler().setLegendPosition(LegendPosition.InsideSW);
 	  wpmChart.getStyler().setLegendVisible(false);
-	  wpmChart.getStyler().setChartBackgroundColor(Color.WHITE);
+	  wpmChart.getStyler().setChartBackgroundColor(new Color(255,255,255));
 	  wpmChart.getStyler().setYAxisTitleVisible(false);
 	  wpmChart.getStyler().setXAxisTicksVisible(false);
 	  wpmChart.getStyler().setPlotGridVerticalLinesVisible(false);
@@ -34,7 +32,7 @@ public class LeftJPanel extends JPanel{
 	  accuracyChart = new XYChartBuilder().width(300).height(300).title("Accuracy").xAxisTitle("Time").yAxisTitle("Y").build();
 	  accuracyChart.addSeries("score",  new double[]{0.0},  new double[]{100.0});
 	  accuracyChart.getStyler().setLegendPosition(LegendPosition.InsideSW);
-	  accuracyChart.getStyler().setChartBackgroundColor(Color.WHITE);
+	  accuracyChart.getStyler().setChartBackgroundColor(new Color(255,255,255));
 	  accuracyChart.getStyler().setLegendVisible(false);
 	  accuracyChart.getStyler().setXAxisTicksVisible(false);
 	  accuracyChart.getStyler().setYAxisTitleVisible(false);
@@ -43,7 +41,7 @@ public class LeftJPanel extends JPanel{
 	  
 		add(accuracyChartPanel);
 		setBorder(null);
-		setBackground(Color.WHITE);
+		setBackground(new Color(0,101,193));
 	}
 	
 	void refreshChartDisplay(double[][] accuracyData, double[][] WordsPMData) {

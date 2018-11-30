@@ -1,11 +1,15 @@
+import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
@@ -32,7 +36,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 		textToType = new JLabel[performanceMetrics.getWordGenerator().getNumberOfLines()];
 		
 		setLayout(new GridBagLayout());
-		setBackground(Color.white);
+		setBackground(new Color(232,232,232));
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.NORTHWEST;
@@ -43,7 +47,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 			textField[i] = new JTextField();
 			textField[i].setFont(new Font("Courier New", Font.BOLD, 24));
 			textField[i].setOpaque(false);
-			textField[i].setCaretColor(Color.GREEN);
+			textField[i].setCaretColor(new Color(61,239,16,100));
 			textField[i].addKeyListener(this);
 			textField[i].setMinimumSize(new Dimension(200, 30));
 			textField[i].setBorder(null);
@@ -58,7 +62,6 @@ public class TypingPanel extends JPanel implements KeyListener {
 			
 			add(textField[i], gc);
 			add(textToType[i], gc);
-			setBackground(new Color(240,240,240));
 			
 			textField[0].setEditable(true);
 
@@ -67,8 +70,9 @@ public class TypingPanel extends JPanel implements KeyListener {
 		for (int i = 0; i < performanceMetrics.getWordGenerator().getNumberOfLines(); i++) {
 			textField[i].setEditable(false);
 		}
+		textField[0].requestFocusInWindow();
+		textField[0].setEditable(true);
 		
-		textField[0].requestFocusInWindow();	
 	}
 	
 	String processInput(char input) {
@@ -77,7 +81,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 		
 		if (result == "CORRECT") {
 			textField[linenumber].setEditable(true);
-			textField[linenumber].setCaretColor(Color.GREEN);
+			textField[linenumber].setCaretColor(new Color(61,239,16,100));
 		  
 		} else if (result == "NEWLINE") {
 			textField[linenumber].setEditable(false);
@@ -89,19 +93,18 @@ public class TypingPanel extends JPanel implements KeyListener {
 				}
 				textField[linenumber].setCaretPosition(0);
 			} else {
-			linenumber++;
+				linenumber++;
 			}
-			textField[linenumber].grabFocus();
-			textField[linenumber].requestFocus();
+			textField[linenumber].requestFocusInWindow();
 			textField[linenumber].setEditable(true);
 		} else if (result == "SPACE") {
 			textField[linenumber].setEditable(true);
-			textField[linenumber].setCaretColor(Color.GREEN);
+			textField[linenumber].setCaretColor(new Color(61,239,16,0));
 			
 		}
 			else if (result == "INCORRECT") {
 			textField[linenumber].setEditable(false);
-			textField[linenumber].setCaretColor(Color.RED);
+			textField[linenumber].setCaretColor(new Color(239,16,16,0));
 		}
 		
 		return result;

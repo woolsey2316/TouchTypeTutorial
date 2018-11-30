@@ -1,91 +1,45 @@
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.text.DecimalFormat;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
 
-public class Dashboard extends JPanel {
-	DecimalFormat df = new DecimalFormat("##.#");
-	JLabel panelWPMValue = new JLabel("___", JLabel.CENTER);
-	JLabel panelAccuracyValue = new JLabel("___", JLabel.CENTER);
-	JLabel panelScoreValue = new JLabel("_____", JLabel.CENTER);
+public class DashBoard extends JPanel {
+	AccuracyPanel accuracyPanel = new AccuracyPanel();
+	WordsPerMinutePanel wordsPerMinutePanel= new WordsPerMinutePanel();
+	ScorePanel scorePanel = new ScorePanel();
+	GoalPanel goalPanel = new GoalPanel(); 
+  
+  public DashBoard() {
+
+  	add(wordsPerMinutePanel);
+  	add(Box.createRigidArea(new Dimension(10,0)));
+  	add(accuracyPanel);
+  	add(Box.createRigidArea(new Dimension(10,0)));
+  	add(scorePanel);
+  	add(Box.createRigidArea(new Dimension(10,0)));
+  	add(goalPanel);
+  	setBackground(new Color(232,232,232));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+  	setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+  }
 	
-	public Dashboard() {
-		Font typingFont = new Font("Palatino", Font.BOLD, 18);
-		Font metricFont = new Font("Maven Pro", Font.PLAIN, 40);
-		
-		setLayout(new FlowLayout());
-	
-		JLabel accuracyTitle = new JLabel("Accuracy", JLabel.CENTER);
-		accuracyTitle.setFont(new Font("Palatino", Font.BOLD, 12));
-	
-		add(accuracyTitle);
-		
-		panelAccuracyValue.setForeground(Color.BLACK);
-		panelAccuracyValue.setFont(metricFont);
-		add(panelAccuracyValue);
-	
-		JLabel wordsPerMinuteTitle = new JLabel("Words Per Minute", JLabel.CENTER);
-		wordsPerMinuteTitle.setFont(new Font("Palatino", Font.BOLD, 12));
-		add(wordsPerMinuteTitle);
-	
-		panelWPMValue.setForeground(Color.BLACK);
-		panelWPMValue.setFont(metricFont);
-		add(panelWPMValue);
-		
-		JLabel scoreTitle = new JLabel("Score", JLabel.CENTER);
-		scoreTitle.setFont(new Font("Palatino", Font.BOLD, 12));
-		add(scoreTitle);
-		
-		panelScoreValue.setForeground(Color.BLACK);
-		panelScoreValue.setFont(metricFont);
-		add(panelScoreValue);
-		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		
-		setBackground(new Color(30, 51, 91));
-		
+	public AccuracyPanel getAccuracyPanel() {
+		return accuracyPanel;
 	}
 	
-	void setAccuracyValue(Double accuracy) {
-		panelAccuracyValue.setText(df.format(accuracy) +"%");
-		if (accuracy > 99) {
-			panelAccuracyValue.setForeground(Color.GREEN);
-		} else if (accuracy > 80) {
-			panelAccuracyValue.setForeground(Color.ORANGE);
-		} else {
-			panelAccuracyValue.setForeground(Color.RED);
-		}
-		
+	public WordsPerMinutePanel getWordsPerMinutePanel() {
+		return wordsPerMinutePanel;
 	}
 	
-	void setWpmValue(Double wpm) {
-		if (wpm > 30) {
-			panelWPMValue.setForeground(Color.GREEN);
-		} else if (wpm > 20) {
-			panelWPMValue.setForeground(Color.ORANGE);
-		} else {
-			panelWPMValue.setForeground(Color.RED);
-		}
-		
-		panelWPMValue.setText(df.format(wpm));
+	public ScorePanel getScorePanel() {
+		return scorePanel;
 	}
 	
-	void setScoreValue(Integer score) {
-		if (score > 300) {
-			panelScoreValue.setForeground(Color.GREEN);
-		} else if (score > 200) {
-			panelScoreValue.setForeground(Color.ORANGE);
-		} else {
-			panelScoreValue.setForeground(Color.RED);
-		}
-		panelScoreValue.setText(df.format(score));
+	public GoalPanel getGoalPanel() {
+		return goalPanel;
 	}
-	
-		
+
 }
-

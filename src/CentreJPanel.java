@@ -1,32 +1,23 @@
 import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class CentreJPanel extends JPanel {
 	TypingPanel typingPanel;
-	DashBoard2 dashboard;
-	JTextField[] textField = new JTextField[3];
-	JLayeredPane[] layeredPane = new JLayeredPane[3];
-	JLabel[] textToType = new JLabel[3];
+	DashBoard dashboard;
 	String[] paragraphOfWords;
 	int linenumber = 0;
-	String result;
 	
 	public CentreJPanel() {
 		setLayout(new BoxLayout(this, 1));
-		setBackground(Color.white);
-		setBorder(null);
-		
+		setBackground(new Color(232,232,232));
+
 		typingPanel = new TypingPanel();
-		dashboard = new DashBoard2();
+		dashboard = new DashBoard();
+		refreshDisplay();
 		add(dashboard);
 		add(typingPanel);
 
@@ -37,28 +28,33 @@ public class CentreJPanel extends JPanel {
 	}
 	
 	void setAccuracyValue(Double accuracy) {
-		dashboard.setAccuracyValue(accuracy);
+		dashboard.getAccuracyPanel().setNumericalValue(accuracy, true);
 	}
 	
 	void setWpmValue(Double wpm) {
-		dashboard.setWpmValue(wpm);
+		dashboard.getWordsPerMinutePanel().setNumericalValue(wpm, false);
 	}
 	
 	void setScoreValue(int score) {
-		dashboard.setScoreValue(score);
+		dashboard.getScorePanel().setNumericalValue(score);
+	}
+	
+	void setGoalValue(double goal) {
+		dashboard.getGoalPanel().setNumericalValue(goal, true);
 	}
 	
 	TypingPanel getTypingPanel() {
 		return typingPanel;
 	}
 	
-	DashBoard2 getDashBoard() {
+	DashBoard getDashBoard() {
 		return dashboard;
 	}
 	
 	void refreshDisplay() {
-		dashboard.setAccuracyValue(typingPanel.getPerformanceMetrics().getRecentAccuracy());
-		dashboard.setWpmValue(typingPanel.getPerformanceMetrics().getRecentWordsperMinute());
-		dashboard.setScoreValue(typingPanel.getPerformanceMetrics().getRecentScore());
+		setAccuracyValue(typingPanel.getPerformanceMetrics().getRecentAccuracy());
+		setWpmValue(typingPanel.getPerformanceMetrics().getRecentWordsperMinute());
+		setScoreValue(typingPanel.getPerformanceMetrics().getRecentScore());
+		setGoalValue(typingPanel.getPerformanceMetrics().getGoal());
 	}
 }

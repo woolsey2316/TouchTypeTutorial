@@ -29,7 +29,7 @@ public class Model {
 	private static LinkedList<Integer> scoreData = new LinkedList<Integer>();
 	private static LinkedList<Double> accuracyData = new LinkedList<Double>();
 	
-	private Map<Character, LinkedList<Double>> characterTimeData  = new HashMap<Character, LinkedList<Double>>();
+	private Map<Character, LinkedList<Integer>> characterTimeData  = new HashMap<Character, LinkedList<Integer>>();
 	private Map<Character, LinkedList<Integer>> characterErrorData  = new HashMap<Character, LinkedList<Integer>>();
 	
 	private int numErrors;
@@ -44,6 +44,7 @@ public class Model {
 	private int score;
 	private int averageWordSize = 6;
 	private int endOfWord = 0;
+	private double goalWPM;
 	int lineNumber;
 	
 	WordGenerator wordGenerator = new WordGenerator();
@@ -58,6 +59,10 @@ public class Model {
 		wordsPerMinute = 0;
 		score = 0;
 		numberofLines = 0;
+		goalWPM = 60.0; 
+		accuracyData.add(typingAccuracy);
+		wordsPerMinuteData.add(wordsPerMinute);
+		scoreData.add(score);
 
 	}
 	
@@ -71,6 +76,10 @@ public class Model {
 			wordsPerMinute = (double) username.get("wordsPerMinute");
 			numberofLines = (int) username.get("numberofLines");
 			score = (int) username.get("score");
+			goalWPM = (double) username.getDouble("goalWPM");
+			accuracyData.add(typingAccuracy);
+			wordsPerMinuteData.add(wordsPerMinute);
+			scoreData.add(score);
 		} catch (NumberFormatException | JSONException e) {
 			
 			new Model();
@@ -92,13 +101,14 @@ public void toJsonFile () {
 	     .add("wordsPerMinute", this.wordsPerMinute)
 	     .add("numberofLines", this.numberofLines)
 			 .add("score", this.score)
-			 .add("numberOfCorrectLetters", this.totalnumSuccessful);
+			 .add("numberOfCorrectLetters", this.totalnumSuccessful)
+			 .add("goalWPM", this.goalWPM);
 	     
 	JsonObjectBuilder letterSpeed = Json.createObjectBuilder();
 	
-	for (Map.Entry<Character, LinkedList<Double>> entry : characterTimeData.entrySet()) {
+	for (Map.Entry<Character, LinkedList<Integer>> entry : characterTimeData.entrySet()) {
     Character key = entry.getKey();
-    LinkedList<Double> list = entry.getValue();
+    LinkedList<Integer> list = entry.getValue();
     GsonBuilder gsonBuilder = new GsonBuilder();
     Gson gson = gsonBuilder.create();
     letterSpeed.add(String.valueOf(key), gson.toJson(list));
@@ -177,7 +187,7 @@ public int getRecentScore() {
 		if (wordsPerMinuteData.descendingIterator().hasNext()) {
 			sum += scoreData.descendingIterator().next();
 		} else {
-			return 0;
+			return 400;
 		}
 	}
 	return sum/5;
@@ -190,7 +200,7 @@ public Double getRecentWordsperMinute() {
 		if (wordsPerMinuteData.descendingIterator().hasNext()) {
 			sum += wordsPerMinuteData.descendingIterator().next();
 		} else {
-			return 0.0;
+			return 40.0;
 		}
 	}
 	return sum/5;
@@ -203,7 +213,7 @@ public Double getRecentAccuracy() {
 		if (wordsPerMinuteData.descendingIterator().hasNext()) {
 			sum += accuracyData.descendingIterator().next();
 		} else {
-			return 0.0;
+			return 100.0;
 		}
 	}
 	return sum/5;
@@ -291,7 +301,7 @@ public String validateInput(char input) {
 			recordData();
 			return "SPACE";
 
-		} else if (input=='\n') {
+		} else if (correctletter=='\n') {
 			recordData();
 			letterIndex = 0;
 			endOfWord = 0;
@@ -305,10 +315,10 @@ public String validateInput(char input) {
 			return "NEWLINE";
 		}
 		if (characterTimeData.containsKey(input)) {
-			 characterTimeData.get(input).add((double) time); 
+			 characterTimeData.get(input).add((int)time); 
 		 } else {
-			 LinkedList<Double> ll = new LinkedList<Double>();
-			 ll.add((double) time);
+			 LinkedList<Integer> ll = new LinkedList<Integer>();
+			 ll.add((int) time);
 			 characterTimeData.put(input, ll);
 		 }
 			return "CORRECT";
@@ -332,6 +342,10 @@ public char getCorrectLetter() {
 	return paragraphOfWords[lineNumber].charAt(letterIndex);
 }
 
+public double getGoal() {
+	return goalWPM;
+}
+
 public int getIndex() {
 	return letterIndex;
 }
@@ -342,6 +356,24 @@ public String[] getWordList() {
 
 public WordGenerator getWordGenerator() {
 	return wordGenerator;
+}
+
+public Map<Character, Integer> getTimeforEachCharacter() {
+	Map<Character, Integer> letterTime = new HashMap<Character, Integer>();
+	for (Map.Entry<Character, LinkedList<Integer>> entry : characterTimeData.entrySet()) {
+		int sum = 0;
+		for (int i = 0; i < 5; ++i) {
+			if (entry.getValue().descendingIterator().hasNext()) {
+				sum += scoreData.descendingIterator().next();
+				letterTime.put(entry.getKey(), sum/5);
+			} else {
+				letterTime.put(entry.getKey(), 0);
+			}
+		}
+		
+	}
+
+	return letterTime;
 }
 
 }

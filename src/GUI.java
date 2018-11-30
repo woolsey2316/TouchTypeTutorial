@@ -1,66 +1,42 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.EtchedBorder;
-
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
-import org.knowm.xchart.style.Styler.LegendPosition;
 
 public class GUI extends JFrame {
 	CentreJPanel centrejPanel;
 	RightJPanel rightjPanel;
 	LeftJPanel leftjPanel;
-	AlphabetPanel bottomjPanel;
+	BottomPanel bottomjPanel;
+	TopJPanel topJPanel;
 	User user;
 	String result;
 	String lineOfWordsHTML;
 	Timer timer;
-
-	private char[] characters = {'e','t','a','o','i','n','s',
-			'r','d','l','c','u','m','w','f','g','y','p','b','v','k','j','x','q','z'};
 	
 	public GUI (User user_) {
 	user = user_; 
 	centrejPanel = new CentreJPanel();
 	rightjPanel = new RightJPanel();
 	leftjPanel = new LeftJPanel();
-	bottomjPanel = new AlphabetPanel();
+	bottomjPanel = new BottomPanel();
+	topJPanel = new TopJPanel();
 	
-	setSize(1200, 700);
+	setSize(1300, 700);
 	
 	add(bottomjPanel, BorderLayout.SOUTH);
 	add(centrejPanel, BorderLayout.CENTER);
 	add(rightjPanel, BorderLayout.EAST);
 	add(leftjPanel, BorderLayout.WEST);
+	add(topJPanel, BorderLayout.NORTH);
 	
-	pack();
 	setVisible(true);
 	
 	setLocationRelativeTo(null);
@@ -78,33 +54,29 @@ public class GUI extends JFrame {
 		      }
 		  }
 		};
-		addWindowListener(exitListener);
-	
-  
+		addWindowListener(exitListener); 
 	
 	final int INTERVAL = 4000;
 	timer = new Timer(INTERVAL, new ActionListener() {
 		public void actionPerformed(ActionEvent evt) {
-			SwingWorker worker = new SwingWorker<Void, Void>() {
+			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 		    @Override
-		    public Void doInBackground() {
-
-			    System.out.println("doing");
+		    public Void doInBackground() throws Exception {
 					return null;
 
 		    }
 
 		    @Override
 		    public void done() {
-		    	System.out.println("done");
-			    leftjPanel.refreshChartDisplay(centrejPanel.getTypingPanel().getPerformanceMetrics().getAccuracyDataArray(), 
-			    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
-			    centrejPanel.refreshDisplay();
+				    leftjPanel.refreshChartDisplay(centrejPanel.getTypingPanel().getPerformanceMetrics().getAccuracyDataArray(), 
+				    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
+				    centrejPanel.refreshDisplay();
+				    bottomjPanel.refreshDisplay(centrejPanel.getPerformanceMetrics().getTimeforEachCharacter());
+		    	
 
 		    }
 			};
 			worker.execute();
-			System.out.println("begin");
 			
 	    }
 	 });

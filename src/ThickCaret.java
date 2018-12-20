@@ -1,10 +1,7 @@
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.JTextComponent;
@@ -46,14 +43,15 @@ public class ThickCaret extends DefaultCaret {
     }
 
     if ((x != rect.x) || (y != rect.y)) {
-    	// erase previous location of caret
+    	// erase the previous location of caret
       repaint(); 
       x = rect.x;
       y = rect.y;
       height = rect.height;
     }
-
-    g.setColor(component.getCaretColor());
+    float[] comp = component.getCaretColor().getRGBComponents(null);
+    Color colour = new Color(comp[0],comp[1],comp[2],1f);
+    g.setColor(colour);
     g.setXORMode(component.getBackground());
 
     if (dotChar == '\n') {

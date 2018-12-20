@@ -2,17 +2,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.text.DecimalFormat;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-import javax.swing.text.TabSet;
-import javax.swing.text.TabStop;
 
 public class DashBoardComponent extends JTextPane{
 	Color colour = new Color(255,255,255);
@@ -23,7 +19,6 @@ public class DashBoardComponent extends JTextPane{
 	StyleContext sc = new StyleContext();
 	DefaultStyledDocument doc;
 	DecimalFormat df = new DecimalFormat("##.#");
-	Border border = BorderFactory.createMatteBorder(0, 3, 0, 0, Color.BLUE);
   final Style titleStyle = sc.addStyle("Title", null);
   final Style excellentStyle = sc.addStyle("ExcellentValue", null);
   final Style moderateStyle = sc.addStyle("ModerateValue", null);

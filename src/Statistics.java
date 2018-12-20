@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class Model {
+public class Statistics {
 	private double typingAccuracy;
 	private int letterIndex;
 	private double wordsPerMinute;
@@ -30,7 +30,7 @@ public class Model {
 	private static LinkedList<Double> accuracyData = new LinkedList<Double>();
 	
 	private Map<Character, LinkedList<Integer>> characterTimeData  = new HashMap<Character, LinkedList<Integer>>();
-	private Map<Character, LinkedList<Integer>> characterErrorData  = new HashMap<Character, LinkedList<Integer>>();
+	private Map<Character, Integer> characterErrorData  = new HashMap<Character, Integer>();
 	
 	private int numErrors;
 	private int totalnumErrors;
@@ -50,7 +50,7 @@ public class Model {
 	WordGenerator wordGenerator = new WordGenerator();
 	String[] paragraphOfWords = wordGenerator.generateWords(letterLevel);
 	
-	public Model() {
+	public Statistics() {
 		letterLevel = 0;
 		totalnumErrors = 0;
 		totalnumSuccessful = 0;
@@ -59,49 +59,52 @@ public class Model {
 		wordsPerMinute = 0;
 		score = 0;
 		numberofLines = 0;
-		goalWPM = 60.0; 
+		goalWPM = 70.0; 
 		accuracyData.add(typingAccuracy);
 		wordsPerMinuteData.add(wordsPerMinute);
 		scoreData.add(score);
 
 	}
 	
-	public Model (JSONObject username) {
+	public Statistics (JSONObject username) {
 		try {
-			letterLevel = (int) username.get("letterLevel");
-			totalnumErrors = (int) username.get("numberOfErrors");
-			totalnumSuccessful = (int) username.get("numberOfCorrectLetters");
-			typingAccuracy = (double) username.get("Typing Accuracy");
-			totalTime = (double) username.get("Total Time");
-			wordsPerMinute = (double) username.get("wordsPerMinute");
-			numberofLines = (int) username.get("numberofLines");
-			score = (int) username.get("score");
-			goalWPM = (double) username.getDouble("goalWPM");
-			accuracyData.add(typingAccuracy);
-			wordsPerMinuteData.add(wordsPerMinute);
-			scoreData.add(score);
+				letterLevel = (int) username.get("letterLevel");
+				totalnumErrors = (int) username.get("Number of Errors");
+				totalnumSuccessful = (int) username.get("Number of Correct Letters");
+				if (totalnumSuccessful == 0 && totalnumErrors == 0) {
+					typingAccuracy = 0.0;
+				} else {
+					typingAccuracy = totalnumSuccessful / (totalnumSuccessful + totalnumErrors);
+				}
+				totalTime = (double) username.get("Total Time");
+				wordsPerMinute = (double) username.get("wordsPerMinute");
+				numberofLines = (int) username.get("numberofLines");
+				score = (int) username.get("score");
+				goalWPM = (double) username.getDouble("goalWPM");
+				accuracyData.add(typingAccuracy);
+				wordsPerMinuteData.add(wordsPerMinute);
+				scoreData.add(score);
 		} catch (NumberFormatException | JSONException e) {
-			
-			new Model();
-			e.printStackTrace();
-			System.out.println("default user is launched");
-			wordGenerator.loadTextFromFile();
+				new Statistics();
+				e.printStackTrace();
+				System.out.println("default user is launched");
+				wordGenerator.loadTextFromFile();
 		} finally {
-			paragraphOfWords = wordGenerator.generateWords(letterLevel);
+				paragraphOfWords = wordGenerator.generateWords(letterLevel);
 		}
 
 	}
 
 public void toJsonFile () {
 	JsonObjectBuilder UserStats = Json.createObjectBuilder()
-	     .add("numberOfErrors", this.numErrors)
+	     .add("Number of Errors", this.totalnumErrors)
+	     .add("Number of Correct Letters", this.totalnumSuccessful)
 	     .add("Typing Accuracy", this.typingAccuracy)
 	     .add("Total Time", this.totalTime)
 	     .add("letterLevel", this.letterLevel)
 	     .add("wordsPerMinute", this.wordsPerMinute)
 	     .add("numberofLines", this.numberofLines)
 			 .add("score", this.score)
-			 .add("numberOfCorrectLetters", this.totalnumSuccessful)
 			 .add("goalWPM", this.goalWPM);
 	     
 	JsonObjectBuilder letterSpeed = Json.createObjectBuilder();
@@ -117,15 +120,15 @@ public void toJsonFile () {
 	UserStats.add("letterSpeed", letterSpeed);
 	JsonObjectBuilder letterErrors = Json.createObjectBuilder();
 	
-	for (Entry<Character, LinkedList<Integer>> entry : characterErrorData.entrySet()) {
+	for (Entry<Character, Integer> entry : characterErrorData.entrySet()) {
     char key = entry.getKey();
-    LinkedList<Integer> list = entry.getValue();
+    Integer list = entry.getValue();
     GsonBuilder gsonBuilder = new GsonBuilder();
     Gson gson = gsonBuilder.create();
     letterErrors.add(String.valueOf(key), gson.toJson(list));
 	}
 	
-	UserStats.add("letterErros", letterErrors);
+	UserStats.add("letterErrors", letterErrors);
 	
 	JsonWriter writer;
 	try {
@@ -143,10 +146,11 @@ public void recordData() {
 			(averageWordSize*(wordTime.time(TimeUnit.MILLISECONDS))));
 	wordsPerMinuteData.add(wordsPerMinute);
 	wordTime.reset();
-	accuracy = (int) 100.0*(letterIndex-endOfWord) / (letterIndex-endOfWord + numErrors);
+	accuracy = (int) 100.0*(letterIndex - endOfWord) / (letterIndex - endOfWord + numErrors);
 	accuracyData.add(accuracy);
-	score = (int) ((int) wordsPerMinute*accuracy*accuracy/1000);
+	score = (int) ((int) wordsPerMinute*accuracy*accuracy/100);
 	scoreData.add(score);
+	totalTime += lineTime.time(TimeUnit.MILLISECONDS);
 	lineTime.reset();
 
 	numberofLines++;
@@ -237,7 +241,7 @@ public double averageWordsPerMinute() {
 	double sum = 0.0;
 	int N = wordsPerMinuteData.size();
 	while (it.hasNext()) {
-		sum = it.next();
+		sum += it.next();
 	}
 	return sum/N;
 }
@@ -247,7 +251,7 @@ public double averageAccuracy() {
 	double sum = 0.0;
 	int N = accuracyData.size();
 	while (it.hasNext()) {
-		sum = it.next();
+		sum += it.next();
 	}
 	return sum/N;
 }
@@ -257,7 +261,7 @@ public double averageScore() {
 	int sum = 0;
 	int N = scoreData.size();
 	while (it.hasNext()) {
-		sum = it.next();
+		sum += it.next();
 	}
 	return 1.0*sum/N;
 }
@@ -327,11 +331,11 @@ public String validateInput(char input) {
 		totalnumErrors++;
 		numErrors++;
 		if (characterErrorData.containsKey(correctletter)) {
-			 characterErrorData.get(correctletter).add(0);
+			 characterErrorData.put(correctletter,characterErrorData.get(correctletter) + 1);
 		 } else {
-			 LinkedList<Integer> ll = new LinkedList<Integer>();
-			 ll.add(0);
-			 characterErrorData.put(correctletter, ll);
+			 if (correctletter >= 96 && correctletter <= 122) {
+				 characterErrorData.put(correctletter, 1);
+			 }
 		 }
 		return "INCORRECT";
 	}
@@ -343,18 +347,22 @@ public char getCorrectLetter() {
 }
 
 public double getGoal() {
-	return goalWPM;
+	
+	return getRecentWordsperMinute()/goalWPM*100;
 }
 
 public int getIndex() {
+	
 	return letterIndex;
 }
 
 public String[] getWordList() {
+	
 	return paragraphOfWords;
 }
 
 public WordGenerator getWordGenerator() {
+	
 	return wordGenerator;
 }
 
@@ -364,16 +372,21 @@ public Map<Character, Integer> getTimeforEachCharacter() {
 		int sum = 0;
 		for (int i = 0; i < 5; ++i) {
 			if (entry.getValue().descendingIterator().hasNext()) {
-				sum += scoreData.descendingIterator().next();
-				letterTime.put(entry.getKey(), sum/5);
+				sum += entry.getValue().descendingIterator().next();
 			} else {
 				letterTime.put(entry.getKey(), 0);
+				break;
 			}
 		}
+		letterTime.put(entry.getKey(), sum/5);
 		
 	}
 
 	return letterTime;
+}
+
+public void generateWords(int level) {
+	paragraphOfWords = wordGenerator.generateWords(letterLevel);
 }
 
 }

@@ -8,22 +8,32 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User {
-	Model performanceMetrics;
+	Statistics performanceMetrics;
 	String name;
+	int wordsPerLine;
+	int numberOfLines;
+	int goalTypingSpeed;
 	double wordsPerMinute;
 	double score;
 	double accuracy;
 	
 public User () {
-	performanceMetrics = new Model();
+	performanceMetrics = new Statistics();
+	goalTypingSpeed = 70;
+	numberOfLines = 3;
+	wordsPerLine = 6;
 
 }
 
 public User (JSONObject username) {
-	performanceMetrics =  new Model(username);
+	performanceMetrics =  new Statistics(username);
 	wordsPerMinute = performanceMetrics.averageWordsPerMinute();
-	score = performanceMetrics.averageAccuracy();
-	accuracy = performanceMetrics.averageScore();
+	score = performanceMetrics.averageScore();
+	accuracy = performanceMetrics.averageAccuracy();
+	
+	System.out.println("wpm = " + wordsPerMinute);
+	System.out.println("Score = " + score);
+	System.out.println("Accuracy = " + accuracy);
 
 }
 
@@ -43,31 +53,52 @@ public void loadUserProfile () {
         
   }
 
-public Model getPerformanceMetrics() {
+public Statistics getPerformanceMetrics() {
 	return this.performanceMetrics;
-
 }
 
 public void setName(String nm) {
 	this.name = nm;
-	
 }
 
-public void setWPM(Model performanceMetrics) {
+public void setWPM(Statistics performanceMetrics) {
 	wordsPerMinute = performanceMetrics.averageWordsPerMinute();
 }
 
-public void setScore(Model performanceMetrics) {
+public void setScore(Statistics performanceMetrics) {
 	score = performanceMetrics.averageScore();
 }
 
-public void setAccuracy(Model performanceMetrics) {
+public void setAccuracy(Statistics performanceMetrics) {
 	accuracy = performanceMetrics.averageAccuracy();
 }
 
 public String getName() {
 	return this.name;
-	
+}
+
+public int getWordsPerLine() {
+	return wordsPerLine;
+}
+
+public int getNumberOfLines() {
+	return numberOfLines;
+}
+
+public int getGoalTypingSpeed() {
+	return goalTypingSpeed;
+}
+
+public void setNumberOfLines(String text) {
+	performanceMetrics.getWordGenerator().setNumberOfLines(Integer.parseInt(text));
+}
+
+public void setGoalwpm(String text) {
+	goalTypingSpeed = Integer.parseInt(text);
+}
+
+public void setWordsPerLines(String text) {
+	performanceMetrics.getWordGenerator().setWordsPerLine(Integer.parseInt(text));
 }
 
 }

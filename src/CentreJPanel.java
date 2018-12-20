@@ -1,21 +1,17 @@
 import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class CentreJPanel extends JPanel {
-	TypingPanel typingPanel;
-	DashBoard dashboard;
-	String[] paragraphOfWords;
-	int linenumber = 0;
+	private TypingPanel typingPanel;
+	private DashBoard dashboard;
 	
-	public CentreJPanel() {
+	public CentreJPanel(User user) {
 		setLayout(new BoxLayout(this, 1));
 		setBackground(new Color(232,232,232));
 
-		typingPanel = new TypingPanel();
+		typingPanel = new TypingPanel(user);
 		dashboard = new DashBoard();
 		refreshDisplay();
 		add(dashboard);
@@ -23,7 +19,7 @@ public class CentreJPanel extends JPanel {
 
 	}
 	
-	Model getPerformanceMetrics() {
+	Statistics getPerformanceMetrics() {
 		return typingPanel.getPerformanceMetrics();
 	}
 	

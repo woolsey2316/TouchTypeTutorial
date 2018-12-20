@@ -1,110 +1,128 @@
-import java.awt.AWTKeyStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.KeyboardFocusManager;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
 
-import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.border.EtchedBorder;
 
 public class TypingPanel extends JPanel implements KeyListener {
-	JTextField[] textField = new JTextField[3];
-	JLayeredPane[] layeredPane = new JLayeredPane[3];
-	JLabel[] textToType = new JLabel[3];
-	String[] paragraphOfWords;
+	LinkedList<JTextField> typingField = new LinkedList<JTextField>();
+	JTextField currentField;
+	LinkedList<JLayeredPane> layeredPane = new LinkedList<JLayeredPane>();
+	LinkedList<JLabel> textToType = new LinkedList<JLabel>();
 	int linenumber = 0;
 	String result;
-	Model performanceMetrics;
+	User user;
+	Statistics performanceMetrics;
+	WordGenerator wordGenerator;
+	GridBagConstraints gc;
+	boolean focusGained;
 
-	public TypingPanel() {
-		performanceMetrics = new Model();
-		textField = new JTextField[performanceMetrics.getWordGenerator().getNumberOfLines()];
-		layeredPane = new JLayeredPane[performanceMetrics.getWordGenerator().getNumberOfLines()];
-		textToType = new JLabel[performanceMetrics.getWordGenerator().getNumberOfLines()];
+	public TypingPanel(User user_) {
+		user = user_;
+		performanceMetrics = user.getPerformanceMetrics();
+		wordGenerator = performanceMetrics.getWordGenerator();
 		
 		setLayout(new GridBagLayout());
 		setBackground(new Color(232,232,232));
-		GridBagConstraints gc = new GridBagConstraints();
+		gc = new GridBagConstraints();
 		gc.fill = GridBagConstraints.HORIZONTAL;
 		gc.anchor = GridBagConstraints.NORTHWEST;
 		gc.gridx = 0;
 		
-		for (int i = 0; i < textField.length; ++i) {
+		for (int i = 0; i < wordGenerator.getNumberOfLines(); ++i) {
 			gc.gridy = i;
-			textField[i] = new JTextField();
-			textField[i].setFont(new Font("Courier New", Font.BOLD, 24));
-			textField[i].setOpaque(false);
-			textField[i].setCaretColor(new Color(61,239,16,100));
-			textField[i].addKeyListener(this);
-			textField[i].setMinimumSize(new Dimension(200, 30));
-			textField[i].setBorder(null);
-			textField[i].setForeground(Color.WHITE);
-			textField[i].setCaret(new ThickCaret());
-			
-			textToType[i] = new JLabel(htmlForm(performanceMetrics.getWordList()[i]));
-			textToType[i].setFont(new Font("Courier New", Font.BOLD, 24));
-			textToType[i].setForeground(Color.GRAY);
-			
-			disableKeys(textField[i].getInputMap());
-			
-			add(textField[i], gc);
-			add(textToType[i], gc);
-			
-			textField[0].setEditable(true);
+			addTextField();
+		}
+		typingField.get(0).setEditable(true);
+		typingField.get(0).requestFocusInWindow();
 
-		}
-		
-		for (int i = 0; i < performanceMetrics.getWordGenerator().getNumberOfLines(); i++) {
-			textField[i].setEditable(false);
-		}
-		textField[0].requestFocusInWindow();
-		textField[0].setEditable(true);
+		focusGained = true;
 		
 	}
 	
+	public void addTextField() {
+		JTextField textField = new JTextField();
+		textField.setFont(new Font("Courier New", Font.BOLD, 24));
+		textField.setOpaque(false);
+		textField.setCaretColor(new Color(61,239,16,50));
+		textField.addKeyListener(this);
+		textField.setMinimumSize(new Dimension(200, 30));
+		textField.setBorder(null);
+		textField.setForeground(new Color(232,232,232));
+		textField.setCaret(new ThickCaret());
+		textField.setEditable(false);
+		
+		typingField.add(textField);
+		
+		JLabel texttoType = new JLabel(htmlForm(performanceMetrics.getWordList()[typingField.size()-1]));
+		texttoType.setFont(new Font("Courier New", Font.BOLD, 24));
+		texttoType.setForeground(Color.GRAY);
+		
+		textToType.add(texttoType);
+		
+		disableKeys(textField.getInputMap());
+		
+		add(textField, gc);
+		add(texttoType, gc);
+	}
+	
+  public void focusGained(FocusEvent e) {
+		focusGained = true;
+	}
+	
+	public void focusLost(FocusEvent e) {
+		focusGained = false;
+	}
+	
+	public boolean isfocusGained() {
+		return focusGained;
+	}
+		
 	String processInput(char input) {
 		
 		result = performanceMetrics.validateInput(input);
 		
 		if (result == "CORRECT") {
-			textField[linenumber].setEditable(true);
-			textField[linenumber].setCaretColor(new Color(61,239,16,100));
+			typingField.get(linenumber).setEditable(true);
+			typingField.get(linenumber).setCaretColor(new Color(61, 239, 16, 50));
 		  
 		} else if (result == "NEWLINE") {
-			textField[linenumber].setEditable(false);
-			if (linenumber == performanceMetrics.getWordGenerator().getNumberOfLines()-1) {
+			typingField.get(linenumber).setEditable(false);
+			if (linenumber == wordGenerator.getNumberOfLines()-1) {
 				linenumber = 0;
-				for (int i = 0; i < textField.length; ++i) {
-					textField[i].setText("");
-					textToType[i].setText(htmlForm(performanceMetrics.getWordList()[i]));
+				int i = 0;
+				for (JLabel elem : textToType) {
+					elem.setText(htmlForm(performanceMetrics.getWordList()[i]));
+					i++;
 				}
-				textField[linenumber].setCaretPosition(0);
+				for (JTextField elem : typingField) {
+					elem.setText("");
+					i++;
+				}
 			} else {
 				linenumber++;
 			}
-			textField[linenumber].requestFocusInWindow();
-			textField[linenumber].setEditable(true);
+			typingField.get(linenumber).requestFocusInWindow();
+			typingField.get(linenumber).setEditable(true);
 		} else if (result == "SPACE") {
-			textField[linenumber].setEditable(true);
-			textField[linenumber].setCaretColor(new Color(61,239,16,0));
+			typingField.get(linenumber).setEditable(true);
+			typingField.get(linenumber).setCaretColor(new Color(61, 239, 16, 50));
 			
 		}
 			else if (result == "INCORRECT") {
-			textField[linenumber].setEditable(false);
-			textField[linenumber].setCaretColor(new Color(239,16,16,0));
+			typingField.get(linenumber).setEditable(false);
+			typingField.get(linenumber).setCaretColor(new Color(239, 16, 16, 50));
 		}
 		
 		return result;
@@ -119,11 +137,31 @@ public class TypingPanel extends JPanel implements KeyListener {
   
 	String htmlForm(String[] str) {
 		String htmlstr = "<html>";
-		for (int i = 0; i < performanceMetrics.getWordGenerator().getNumberOfLines(); ++i) {
+		for (int i = 0; i < wordGenerator.getNumberOfLines(); ++i) {
 			htmlstr += str[i] + "</br>";
 		}
 		htmlstr += "</html>";
 		return htmlstr;
+	}
+	
+	public void updateText() {
+		performanceMetrics.generateWords(0);
+		for (JTextField elem : typingField) {
+			remove(elem);
+		}
+		for (JLabel elem : textToType) {
+			remove(elem);
+		}
+		typingField.clear();
+		textToType.clear();
+		
+		for (int i = 0; i < wordGenerator.getNumberOfLines(); ++i) {
+			gc.gridy = i;
+			addTextField();
+		}
+		typingField.get(0).setEditable(true);
+		typingField.get(0).requestFocusInWindow();
+		typingField.get(0).setCaretPosition(0);
 	}
 	
 	String htmlForm(String str) {
@@ -148,7 +186,7 @@ public class TypingPanel extends JPanel implements KeyListener {
 		return result;
 	}
 	
-	Model getPerformanceMetrics() {
+	Statistics getPerformanceMetrics() {
 		return performanceMetrics;
 	}
 }

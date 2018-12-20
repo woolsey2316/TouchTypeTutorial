@@ -23,8 +23,8 @@ public class GUI extends JFrame {
 	
 	public GUI (User user_) {
 	user = user_; 
-	centrejPanel = new CentreJPanel();
-	rightjPanel = new RightJPanel();
+	centrejPanel = new CentreJPanel(user_);
+	rightjPanel = new RightJPanel(user_);
 	leftjPanel = new LeftJPanel();
 	bottomjPanel = new BottomPanel();
 	topJPanel = new TopJPanel();
@@ -38,7 +38,6 @@ public class GUI extends JFrame {
 	add(topJPanel, BorderLayout.NORTH);
 	
 	setVisible(true);
-	
 	setLocationRelativeTo(null);
 		
 		WindowListener exitListener = new WindowAdapter() {
@@ -50,38 +49,51 @@ public class GUI extends JFrame {
 		           JOptionPane.QUESTION_MESSAGE, null, null, null);
 		      if (confirm == 0) {
 		      	centrejPanel.getTypingPanel().getPerformanceMetrics().toJsonFile(); 
-		      	System.exit(0);
+ 		      	System.exit(0);
 		      }
 		  }
 		};
-		addWindowListener(exitListener); 
-	
-	final int INTERVAL = 4000;
-	timer = new Timer(INTERVAL, new ActionListener() {
-		public void actionPerformed(ActionEvent evt) {
-			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-		    @Override
-		    public Void doInBackground() throws Exception {
-					return null;
+		addWindowListener(exitListener);
+		
+		rightjPanel.getSettingsComponent().saveButton.addActionListener( new ActionListener()
+	  {
+      public void actionPerformed(ActionEvent e)
+      {
+    	  rightjPanel.getSettingsComponent().updatePreferences();
+      	centrejPanel.getTypingPanel().updateText();
+      }
+	  });
+		
+  	final int INTERVAL = 4000;
+		timer = new Timer(INTERVAL, new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+			    @Override
+			    public Void doInBackground() throws Exception {
+						return null;
 
-		    }
+			    }
 
-		    @Override
-		    public void done() {
+			    @Override
+			    public void done() {
+			    	if (!centrejPanel.getTypingPanel().isfocusGained()) {
+			    		centrejPanel.getPerformanceMetrics().resetTime();
+			    	}
+			    	
+			    	  	
 				    leftjPanel.refreshChartDisplay(centrejPanel.getTypingPanel().getPerformanceMetrics().getAccuracyDataArray(), 
 				    		centrejPanel.getPerformanceMetrics().getWordsPerMinuteDataArray());
 				    centrejPanel.refreshDisplay();
 				    bottomjPanel.refreshDisplay(centrejPanel.getPerformanceMetrics().getTimeforEachCharacter());
-		    	
 
+			    }
+				};
+				worker.execute();
+				
 		    }
-			};
-			worker.execute();
-			
-	    }
-	 });
-	timer.setRepeats(true);
-	timer.start();
+		 });
+		timer.setRepeats(true);
+		timer.start();
 
   }
 }

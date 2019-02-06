@@ -16,19 +16,21 @@ import javax.swing.SwingConstants;
 
 public class SettingsComponent extends JPanel {
 	User user;
-	GoalTypingSpeedSetting goalTypingSpeedSetting;
-	NumberOfLinesSetting numberOfLinesSetting;
-	WordsPerLineSetting wordsPerLineSetting; 
+	EditableSetting goalTypingSpeedSetting;
+	EditableSetting numberOfLinesSetting;
+	EditableSetting wordsPerLineSetting;
 	JButton saveButton;
 	
 	public SettingsComponent(User user_) {
 		user = user_;
+		String goalSpeed = Integer.toString(user.getGoalTypingSpeed());
+		String numberOfLines = Integer.toString(user.getNumberOfLines());
+		String wordsPerLine = Integer.toString(user.getWordsPerLine());
 		
+		goalTypingSpeedSetting = new EditableSetting(user, "Goal Typing Speed", goalSpeed);
+		numberOfLinesSetting = new EditableSetting(user, "Number of Lines", numberOfLines);
+		wordsPerLineSetting = new EditableSetting(user, "Words per Line", wordsPerLine);
 		saveButton = new JButton("Save");
-
-		goalTypingSpeedSetting = new GoalTypingSpeedSetting(user);
-		numberOfLinesSetting = new NumberOfLinesSetting(user);
-		wordsPerLineSetting = new WordsPerLineSetting(user);
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		Color colour = new Color(20, 25, 28);

@@ -18,9 +18,11 @@ import javax.swing.border.Border;
 public class RightJPanel extends JPanel {
 	User user;
 	SettingsComponent settingsComponent;
+	WordGenerator wordGenerator;
 	
 	public RightJPanel(User user_) {
 		user = user_;
+		wordGenerator = user.getPerformanceMetrics().getWordGenerator();
 		settingsComponent = new SettingsComponent(user);
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -79,7 +81,8 @@ public class RightJPanel extends JPanel {
 	  {
 	      public void actionPerformed(ActionEvent e)
 	      {
-	      	WordGenerator.createFrame();
+	    	  CustomTextWindow customTextWindow = new CustomTextWindow(wordGenerator);
+	    	  customTextWindow.createFrame();
 	      }
 	  });
 		

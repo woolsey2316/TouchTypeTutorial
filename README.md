@@ -1,7 +1,7 @@
 # TouchTypeTutorial
 Learn to type faster and with fewer errors with this free typing tutor.
 
-![Screenshot]http://github.com/woolsey2316/TouchTypeTutorial/blob/master/images/screenshot.png/images/screenshot.png
+![Screenshot]https://github.com/woolsey2316/TouchTypeTutorial/blob/master/images/screenshot.png
 
 # What is Touch Typing
 Touch typing is the ability to use muscle memory to type very quickly, without relying on the keyboard, while using all ten fingers. It significantly improves typing speed and eliminates errors. Touch typing simply makes you more productive and it is a skill worth learning. Many people engage in the bad habit of 'hunt-and-peck' typing, even those seasoned professionals with years and decades of computer experience. It is easy to understand, though, as touch typing requires dedicated practice to  learn it well.

@@ -1,3 +1,6 @@
+import GUI.GUI;
+import Model.User;
+
 public class TouchTypeTutorialApp {
 	User user;
 	GUI gui;

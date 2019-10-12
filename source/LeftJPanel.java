@@ -1,56 +1,127 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.style.Styler.LegendPosition;
-
-public class LeftJPanel extends JPanel{
-	XYChart accuracyChart;
-	XYChart wpmChart;
-	JPanel accuracyChartPanel;
-	JPanel wpmChartPanel;
+public class RightJPanel extends JPanel {
+	User user;
+	SettingsComponent settingsComponent;
+	CustomTextWindow customTextWindow;
+	WordGenerator wordGenerator;
 	
-	public LeftJPanel() {
-		setLayout(new GridLayout(2,1));
+	public RightJPanel(User user_) {
+		user = user_;
+		wordGenerator = user.getPerformanceMetrics().getWordGenerator();
+		settingsComponent = new SettingsComponent(user);
+		customTextWindow = new CustomTextWindow(wordGenerator);
 		
-		wpmChart = new XYChartBuilder().width(300).height(300).title("Words per minute").xAxisTitle("Time").yAxisTitle("Y").build();
-		wpmChart.addSeries("wordsPerMinute", new double[]{0.0}, new double[]{20.0});
-		wpmChart.getStyler().setLegendPosition(LegendPosition.InsideSW);
-		wpmChart.getStyler().setLegendVisible(false);
-		wpmChart.getStyler().setChartBackgroundColor(new Color(255,255,255));
-		wpmChart.getStyler().setYAxisTitleVisible(false);
-		wpmChart.getStyler().setXAxisTicksVisible(false);
-		wpmChart.getStyler().setPlotGridVerticalLinesVisible(false);
-		wpmChartPanel = new XChartPanel<XYChart>(wpmChart);
-	  
-		add(wpmChartPanel);
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		Color colour = new Color(20, 25, 28);
+		Border border = BorderFactory.createMatteBorder(1, 0, 1, 0, Color.WHITE);
+		Border border2 = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE);
 		
-		accuracyChart = new XYChartBuilder().width(300).height(300).title("Accuracy").xAxisTitle("Time").yAxisTitle("Y").build();
-		accuracyChart.addSeries("score",  new double[]{0.0},  new double[]{100.0});
-		accuracyChart.getStyler().setLegendPosition(LegendPosition.InsideSW);
-		accuracyChart.getStyler().setChartBackgroundColor(new Color(255,255,255));
-		accuracyChart.getStyler().setLegendVisible(false);
-		accuracyChart.getStyler().setXAxisTicksVisible(false);
-		accuracyChart.getStyler().setYAxisTitleVisible(false);
-		accuracyChart.getStyler().setPlotGridVerticalLinesVisible(false);
-		accuracyChartPanel = new XChartPanel<XYChart>(accuracyChart);
-	  
-		add(accuracyChartPanel);
-		setBorder(null);
-		setBackground(new Color(0,101,193));
+		JButton jButton2 = new JButton("SETTINGS");
+		jButton2.setFont(new Font("Palatino", Font.PLAIN, 18));
+		jButton2.setForeground(new Color(255,255,255));
+		jButton2.setBackground(colour);
+		jButton2.setBorder(border);
+	  try {
+	    Image img = ImageIO.read(getClass().getResource("images/cog.png"));
+	    jButton2.setIcon(new ImageIcon(img));
+	  } catch (Exception ex) {
+	    System.out.println(ex);
+	  }
+		JPanel panel2 = new JPanel(new BorderLayout());
+		panel2.setMaximumSize(new Dimension(300, 40));
+		panel2.add(jButton2);
+		jButton2.setHorizontalAlignment(SwingConstants.LEFT);
+		add(panel2);
+		  jButton2.addActionListener(new ActionListener()
+		  {
+		      public void actionPerformed(ActionEvent e)
+		      {
+		      	settingsComponent.saveButton.addActionListener( new ActionListener()
+		    	  {
+		    	      public void actionPerformed(ActionEvent e)
+		    	      {
+		    	      	remove(settingsComponent);
+		    	      	settingsComponent.closeFrame();
+		    	      }
+		    	  });
+		      	add(settingsComponent);
+		      	settingsComponent.createFrame();
+		      }
+		  });
+		
+		JButton jButton3= new JButton("LOAD CUSTOM TEXT");
+		jButton3.setFont(new Font("Palatino", Font.PLAIN, 18));
+		jButton3.setForeground(new Color(255,255,255));
+		jButton3.setBackground(colour);
+		jButton3.setBorder(border2);
+	  try {
+	    Image img = ImageIO.read(getClass().getResource("images/diskette.png"));
+	    jButton3.setIcon(new ImageIcon(img));
+	  } catch (Exception ex) {
+	    System.out.println(ex);
+	  }
+		JPanel panel3 = new JPanel(new BorderLayout());
+		panel3.setMaximumSize(new Dimension(300, 40));
+		panel3.add(jButton3);
+		jButton3.setHorizontalAlignment(SwingConstants.LEFT);
+		add(panel3);
+	  jButton3.addActionListener( new ActionListener()
+	  {
+	      public void actionPerformed(ActionEvent e)
+	      {
+	    	  customTextWindow.createFrame();
+	      }
+	  });
+		JButton jButton4= new JButton("USER PROFILE");
+		jButton4.setFont(new Font("Palatino", Font.PLAIN, 18));
+		jButton4.setForeground(new Color(255,255,255));
+		jButton4.setBackground(colour);
+		jButton4.setBorder(border2);
+	  try {
+	    Image img = ImageIO.read(getClass().getResource("images/user.png"));
+	    jButton4.setIcon(new ImageIcon(img));
+	  } catch (Exception ex) {
+	    System.out.println(ex);
+	  }
+		JPanel panel4 = new JPanel(new BorderLayout());
+		panel4.setMaximumSize(new Dimension(300, 40));
+		panel4.add(jButton4);
+		jButton4.setHorizontalAlignment(SwingConstants.LEFT);
+		add(panel4);
+		jButton4.addActionListener( new ActionListener()
+	  {
+	      public void actionPerformed(ActionEvent e)
+	      {
+	    	  new UserProfile(user);
+	      }
+	  });
+		
+		setBackground(colour);
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	}
 	
-	void refreshChartDisplay(double[][] accuracyData, double[][] WordsPMData) {
-		
-		accuracyChart.updateXYSeries("score", accuracyData[0], accuracyData[1], null);
-		accuracyChartPanel.repaint();
-	  
-		wpmChart.updateXYSeries("wordsPerMinute", WordsPMData[0], WordsPMData[1], null);
-		wpmChartPanel.repaint();
+	public SettingsComponent getSettingsComponent() {
+		return settingsComponent;
+	}
+	
+	public CustomTextWindow getCustomTextWindow() {
+		return customTextWindow;
 	}
 
 }

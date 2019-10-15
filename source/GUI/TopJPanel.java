@@ -19,7 +19,7 @@ public class TopJPanel extends JPanel {
 		setLayout(new GridBagLayout());
 		  
 		JLabel jLabel = new JLabel("Rapid Touch-Typer");
-		jLabel.setFont(new Font("Palatino", Font.PLAIN, 25));
+		jLabel.setFont(new Font("Palatino", Font.BOLD, 25));
 		jLabel.setForeground(new Color(240,240,240));
 		jLabel.setMaximumSize(new Dimension(300,40));
 		jLabel.setAlignmentX(CENTER_ALIGNMENT);

@@ -3,19 +3,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
+import GUI.VisualElements.Profile;
 import Model.User;
 import Model.UserProfile;
 import Model.WordGenerator;
@@ -32,38 +32,47 @@ public class LeftJPanel extends JPanel {
 		settingsComponent = new SettingsComponent(user);
 		customTextWindow = new CustomTextWindow(wordGenerator);
 		
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		Color colour = new Color(20, 25, 28);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		Color colour = new Color(57, 55, 64);
 		Color grey = new Color(230,230,230);
 		
-		final JButton jButton2 = new JButton(" Settings");
-		jButton2.setFont(new Font("Palatino", Font.PLAIN, 18));
-		jButton2.setForeground(grey);
-		jButton2.setBackground(colour);
-		jButton2.setFocusable(false);
+		Profile profilePanel= new Profile();
+		add(profilePanel);
 		
-		jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+		JPanel padding = new JPanel(new BorderLayout());
+		padding.setMaximumSize(new Dimension(300, 40));
+		padding.setBackground(new Color(0,0,0,0));
+		add(padding);
+		
+		final JButton settingsButton = new JButton("Settings");
+		
+		Font font = new Font("segoe", Font.PLAIN, 18);
+		Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+		attributes.put(TextAttribute.TRACKING, 0.05);
+		Font font2 = font.deriveFont(attributes);
+		
+		settingsButton.setFont(font2);		
+		settingsButton.setForeground(grey);
+		settingsButton.setBackground(colour);
+		settingsButton.setBorder(null);
+		settingsButton.setFocusable(false);
+		
+		settingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
-		    	jButton2.setBackground(new Color(43, 47, 50));
+		    	settingsButton.setBackground(new Color(43, 47, 50));
 		    }
 
 		    public void mouseExited(java.awt.event.MouseEvent evt) {
-		    	jButton2.setBackground(new Color(20, 25, 28));
+		    	settingsButton.setBackground(colour);
 		    }
 		});
 		
-	  try {
-	    Image img = ImageIO.read(getClass().getResource("../cog.png"));
-	    jButton2.setIcon(new ImageIcon(img));
-	  } catch (Exception ex) {
-	    System.out.println(ex);
-	  }
-		JPanel panel2 = new JPanel(new BorderLayout());
-		panel2.setMaximumSize(new Dimension(300, 40));
-		panel2.add(jButton2);
-		jButton2.setHorizontalAlignment(SwingConstants.LEFT);
-		add(panel2);
-		  jButton2.addActionListener(new ActionListener()
+		JPanel settingsPanel = new JPanel(new BorderLayout());
+		settingsPanel.setMaximumSize(new Dimension(300, 40));
+		settingsPanel.add(settingsButton);
+		settingsButton.setHorizontalAlignment(SwingConstants.LEFT);
+		add(settingsPanel);
+		  settingsButton.addActionListener(new ActionListener()
 		  {
 		      public void actionPerformed(ActionEvent e)
 		      {
@@ -80,68 +89,58 @@ public class LeftJPanel extends JPanel {
 		      }
 		  });
 		
-		final JButton jButton3= new JButton("  Load Custom Text");
-		jButton3.setFont(new Font("Palatino", Font.PLAIN, 18));
-		jButton3.setForeground(grey);
-		jButton3.setBackground(colour);
-		jButton3.setFocusable(false);
+		final JButton customTextButton= new JButton("Load Custom Text");
+		customTextButton.setFont(font2);
+		customTextButton.setForeground(grey);
+		customTextButton.setBackground(colour);
+		customTextButton.setBorder(null);
+		customTextButton.setFocusable(false);
 		
-		jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+		customTextButton.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
-		    	jButton3.setBackground(new Color(43, 47, 50));
+		    	customTextButton.setBackground(new Color(43, 47, 50));
 		    }
 
 		    public void mouseExited(java.awt.event.MouseEvent evt) {
-		    	jButton3.setBackground(new Color(20, 25, 28));
+		    	customTextButton.setBackground(colour);
 		    }
 		});
 		
-	  try {
-	    Image img = ImageIO.read(getClass().getResource("../diskette.png"));
-	    jButton3.setIcon(new ImageIcon(img));
-	  } catch (Exception ex) {
-	    System.out.println(ex);
-	  }
-		JPanel panel3 = new JPanel(new BorderLayout());
-		panel3.setMaximumSize(new Dimension(300, 40));
-		panel3.add(jButton3);
-		jButton3.setHorizontalAlignment(SwingConstants.LEFT);
-		add(panel3);
-	  jButton3.addActionListener( new ActionListener()
+		JPanel customTextPanel = new JPanel(new BorderLayout());
+		customTextPanel.setMaximumSize(new Dimension(300, 40));
+		customTextPanel.add(customTextButton);
+		customTextButton.setHorizontalAlignment(SwingConstants.LEFT);
+		add(customTextPanel);
+	  customTextButton.addActionListener( new ActionListener()
 	  {
 	      public void actionPerformed(ActionEvent e)
 	      {
 	    	  customTextWindow.createFrame();
 	      }
 	  });
-		final JButton jButton4= new JButton(" User Profile");
-		jButton4.setFont(new Font("Palatino", Font.PLAIN, 18));
-		jButton4.setForeground(grey);
-		jButton4.setBackground(colour);
-		jButton4.setFocusable(false);
+		final JButton userProfileButton= new JButton("User Profile");
+		userProfileButton.setFont(font2);
+		userProfileButton.setForeground(grey);
+		userProfileButton.setBackground(colour);
+		userProfileButton.setBorder(null);
+		userProfileButton.setFocusable(false);
 		
-		jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+		userProfileButton.addMouseListener(new java.awt.event.MouseAdapter() {
 		    public void mouseEntered(java.awt.event.MouseEvent evt) {
-		    	jButton4.setBackground(new Color(43, 47, 50));
+		    	userProfileButton.setBackground(new Color(43, 47, 50));
 		    }
 
 		    public void mouseExited(java.awt.event.MouseEvent evt) {
-		    	jButton4.setBackground(new Color(20, 25, 28));
+		    	userProfileButton.setBackground(colour);
 		    }
 		});
 		
-	  try {
-	    Image img = ImageIO.read(getClass().getResource("../user.png"));
-	    jButton4.setIcon(new ImageIcon(img));
-	  } catch (Exception ex) {
-	    System.out.println(ex);
-	  }
-		JPanel panel4 = new JPanel(new BorderLayout());
-		panel4.setMaximumSize(new Dimension(300, 40));
-		panel4.add(jButton4);
-		jButton4.setHorizontalAlignment(SwingConstants.LEFT);
-		add(panel4);
-		jButton4.addActionListener( new ActionListener()
+		JPanel userProfilePanel = new JPanel(new BorderLayout());
+		userProfilePanel.setMaximumSize(new Dimension(300, 40));
+		userProfilePanel.add(userProfileButton);
+		userProfileButton.setHorizontalAlignment(SwingConstants.LEFT);
+		add(userProfilePanel);
+		userProfileButton.addActionListener( new ActionListener()
 	  {
 	      public void actionPerformed(ActionEvent e)
 	      {
@@ -149,8 +148,8 @@ public class LeftJPanel extends JPanel {
 	      }
 	  });
 		
-		setBackground(new Color(20, 25, 28));
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		setBackground(colour);
+		setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 10));
 	}
 	
 	public SettingsComponent getSettingsComponent() {

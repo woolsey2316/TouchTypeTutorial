@@ -44,12 +44,13 @@ public class GUI extends JFrame {
 	
 	GridBagConstraints c = new GridBagConstraints();
 	c.weightx = 0; c.weighty=1;
-	c.fill = GridBagConstraints.BOTH;
+	c.fill = GridBagConstraints.VERTICAL;
 	c.gridheight = 2;
 	c.gridx = 0;
 	c.gridy = 0;
 	add(leftjPanel, c);
 	
+	c.fill = GridBagConstraints.BOTH;
 	c.weighty=0; c.weightx = 1;
 	c.gridheight = 1;
 	c.gridwidth = 2;
@@ -64,7 +65,7 @@ public class GUI extends JFrame {
 	c.gridy = 1;
 	add(centrejPanel, c);
 	
-	c.weighty=1;  c.weightx = 0;
+	c.weighty=1;  c.weightx = 0.9;
 	c.gridheight = 2;
 	c.gridwidth = 1;
 	c.gridx = 2;
